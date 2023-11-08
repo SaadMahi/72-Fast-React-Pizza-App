@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useLoaderData } from 'react-router-dom';
 import { getMenu } from '../../services/apiRestaurant';
+import MenuItem from './MenuItem';
 
 /** CREATING THE LOADER FUNCTION
  * 1) convention is to call this function a loader
@@ -68,9 +69,14 @@ import { getMenu } from '../../services/apiRestaurant';
 
 function Menu() {
   const menu = useLoaderData();
-  console.log(menu);
 
-  return <h1>Menu</h1>;
+  return (
+    <ul>
+      {menu.map((pizza) => (
+        <MenuItem pizza={pizza} key={pizza.id} />
+      ))}
+    </ul>
+  );
 }
 
 export async function loader() {
