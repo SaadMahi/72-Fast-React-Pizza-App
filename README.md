@@ -1,36 +1,23 @@
-## Loader Functionality:
+# Implementing Loading Functionality in App Layout
 
-**Step 1: Creating the Loader Function**
+In the given code, the implementation of loading functionality is described to display a loading spinner when accessing certain routes, such as the 'Menu' route, while waiting for data to be fetched. This process is detailed as follows:
 
-- A loader function is introduced to fetch data from an API. The convention is to name this function "loader."
-- The data-fetching logic is abstracted into this function to maintain a centralized approach. In this case, the `getMenu` function from the `apiRestaurant.js` file is used to retrieve data.
+## 1. Checking Application State Using `useNavigation()` Hook
 
-**Step 2: Providing the Loader**
+- To ensure the application is in the right state for displaying a loading spinner, it needs to check if it is currently idle, loading, or submitting.
+- This information can be obtained using the `useNavigation()` hook. The state retrieved from this hook pertains to the entire application, not just a specific page.
+- When one of the pages is in the loading process, the navigation state becomes 'loading.'
 
-- The loader function is connected to a specific route, which, in this case, is the 'Menu' route. This is achieved by adding a `loader` property to the route configuration.
+## 2. Creating a Generic Loader
 
-```javascript
-    {
-      path: '/menu',
-      element: <Menu />,
-      loader: menuLoader,
-    }
-```
+- It's explained that creating a loading indicator specifically for fetching menu items doesn't make sense. Instead, a generic loader will be created in the `<AppLayout/>` component.
+- The `useNavigation()` hook is used to access the navigation state, and it's logged to the console to verify the state changes.
+- When clicking the 'Menu' button, the state changes from 'idle' to 'loading' as the page starts loading, and it returns to 'idle' when the page loading is complete.
 
-**Step 3: Getting Data into the Component**
+## 3. Displaying the Loader Conditionally
 
-- The data fetched by the loader function needs to be accessed within the component. This is done using a custom hook called `useLoaderData()`. The data is automatically associated with the page and comes from the `menuLoader` specified in the route.
-- The fetched data is logged to the console for verification.
+- With the information obtained from the navigation state, a variable named `isLoading` is created to indicate whether the application is in a loading state.
+- A `<Loader/>` component is added to the `<AppLayout/>`, which will be displayed conditionally when `isLoading` is true.
+- The `<Loader/>` component serves as a loading indicator and overlays the entire page while data is being fetched.
 
-**Step 4: Component Implementation**
-
-- The `Menu` component is where the fetched data is used.
-- The component's primary role is to render the menu data, and it uses the data fetched by the loader function.
-- As soon as the 'Menu' route is accessed, a fetch request is automatically initiated, and the menu data is displayed in the component.
-
-**Step 5: Benefits of Render-As-You-Fetch Strategy**
-
-- The code follows a modern approach where data fetching is initiated at the same time as the route rendering. This is in contrast to the traditional approach of fetching data after the component has rendered, avoiding a "data loading waterfall."
-- The `react-router` library is not only responsible for matching components to URLs but also for providing the necessary data for each page, making it more efficient and responsive.
-
-In summary, this code exemplifies the use of a loader function to fetch data for a specific route, connecting it to the corresponding component, and rendering data in real-time as it's fetched. This "render-as-you-fetch" approach enhances the efficiency and user experience of the application.
+This implementation ensures that a loading spinner is displayed when the application is in a loading state, enhancing the user experience by providing visual feedback during data retrieval, as demonstrated when fetching pizza data on the 'Menu' page.
