@@ -1,23 +1,25 @@
-# Implementing Loading Functionality in App Layout
+# Error Handling in Modern React Router
 
-In the given code, the implementation of loading functionality is described to display a loading spinner when accessing certain routes, such as the 'Menu' route, while waiting for data to be fetched. This process is detailed as follows:
+In the provided code, a mechanism for handling errors within the React Router using the `createBrowserRouter` function is detailed. This approach allows you to gracefully handle errors by rendering an error component when issues occur during data loading, actions, or component rendering. The process is outlined as follows:
 
-## 1. Checking Application State Using `useNavigation()` Hook
+## Specifying Error Handling in the Parent Route
 
-- To ensure the application is in the right state for displaying a loading spinner, it needs to check if it is currently idle, loading, or submitting.
-- This information can be obtained using the `useNavigation()` hook. The state retrieved from this hook pertains to the entire application, not just a specific page.
-- When one of the pages is in the loading process, the navigation state becomes 'loading.'
+To handle errors that may occur in nested routes, you can specify an error element at the parent route level, which is `<AppLayout/>`. This way, errors that bubble up from nested routes can be captured and handled at the top level.
 
-## 2. Creating a Generic Loader
+1. The error element is set using the `errorElement` property in the parent route, and it's assigned the `Error` component that was previously created.
 
-- It's explained that creating a loading indicator specifically for fetching menu items doesn't make sense. Instead, a generic loader will be created in the `<AppLayout/>` component.
-- The `useNavigation()` hook is used to access the navigation state, and it's logged to the console to verify the state changes.
-- When clicking the 'Menu' button, the state changes from 'idle' to 'loading' as the page starts loading, and it returns to 'idle' when the page loading is complete.
+2. When attempting to access a non-existent path in the browser, the application immediately navigates to the error element. An initial temporary message is displayed.
 
-## 3. Displaying the Loader Conditionally
+## Accessing Error Messages Using `useRouteError()` Hook
 
-- With the information obtained from the navigation state, a variable named `isLoading` is created to indicate whether the application is in a loading state.
-- A `<Loader/>` component is added to the `<AppLayout/>`, which will be displayed conditionally when `isLoading` is true.
-- The `<Loader/>` component serves as a loading indicator and overlays the entire page while data is being fetched.
+To obtain the actual error message that occurred within React Router, the `useRouteError()` hook is used. This hook allows the `Error` component to access detailed error information.
 
-This implementation ensures that a loading spinner is displayed when the application is in a loading state, enhancing the user experience by providing visual feedback during data retrieval, as demonstrated when fetching pizza data on the 'Menu' page.
+1. The error information includes the status, error, and error message. You can utilize the error message to display precise error details in the error component.
+
+## Handling Errors in Loader Functions
+
+Error handling can also be integrated into loader functions. In cases where there's a fetch error, such as when using an incorrect URL, the error message can be captured within the error component by referencing `error.message`.
+
+1. This setup ensures that the application doesn't entirely replace the layout with the error page when an issue occurs. Instead, the error component can be placed within child routes, such as the `Menu` route. This way, errors are gracefully integrated into the application layout.
+
+By implementing this error-handling approach, you can enhance the user experience by providing clear error messages and ensuring that errors don't disrupt the entire application, as demonstrated when accessing the 'Menu' route in the code.
