@@ -1,1 +1,1 @@
-# 72-Fast-React-Pizza-App
+Tailwind CSS is a utility-first CSS framework designed for building modern and responsive user interfaces. It provides a set of pre-designed utility classes that can be directly applied to HTML elements, streamlining the UI development process. Tailwind is highly customizable, allowing developers to configure styles, colors, fonts, and other design elements according to project requirements.
