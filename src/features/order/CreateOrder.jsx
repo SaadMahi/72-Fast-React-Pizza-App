@@ -1,68 +1,12 @@
 /* eslint-disable no-unused-vars */
 import { Form, redirect, useActionData, useNavigation } from 'react-router-dom';
 import { createOrder } from '../../services/apiRestaurant';
-
-/** Error handling in Form Action
- * So we want to disable this button as we click on it
- * ! figure 1
- * So we can do that once again with the help of useNavigation hook because earlier remeber we we played
- * with useNavigation and we found that the navigation state can either be idle, loading or submitting
- * and so we can do something very similar to what we did here,
- * ! figure 2
- * here we showed loading indicator whenever the navigation state was loading, let's do something similar to
- * navigatio.submitting, let's do it in here createOrder component
- * ! figure 3
- * now all we have to do is use it inside the button
- * ! figure 4
- * Okay good...
- *
- * 1) Now let's work on the error handling part, by error handling i mean that there might happen some error
- * while submitting these forms, eg:
- * phone number might have alphabets, so it will pass but that's not a valid phone number, So we can
- * check for this number right here in our action
- * ! fig: 5
- * then if it is not correct then we can tell our form that the error is right in the field of tel input
- * i) So let's create an errors object first
- * ! fig: 6
- * so if there is some errors here, we will return immediately and no new order is created on the server
- * and we also don't get redirected to the other order page and if everything is okay we will be redirected
- * ii) now there might be question what is this isValidPhone ?
- * well that was not answered in the lecture
- * ! fig: 7
- * ok so now within this CreateOrder component
- * ! fig: 8
- * is connected with this action
- * ! fig: 8.1
- * and therefore in this component
- * ! fig: 8
- * we can get access to the data that is returned from that action, so it is another custom hook
- * that we will need here that is
- * * useActionData()
- * notice this hook is not called something like useActionError's as it is used for any data, but the
- * most common use case of this hook is what we are about to do now, so to return some errors that we can
- * display on the form Ui
- * ! fig: 9
- * Now let's display something immediately after tel input and let's test it
- * ! fig: 10
- * that works....
- *
- * 2) So to recap and sum up what we just did
- * * if (!isValidPhone(order.phone))
- * this above was clearly not valid and therefore we added phone property to the error object
- * which was empty
- * ii) next as object length or key length was greater than 0 that means error exists now so then the error
- * object was returned immediately, so new order was then not created.
- * iii) then in the compoent that is connected to the Action we can get access to whatever was returned
- * from that action incase there was no submission.
- * iv) So this is how we do error handling in forms using this technique i just showed, so basically that's
- * returning something from the actions and receiving that here in the form in order to display the error msg
- * like this and with this we actually wrap up this initial react router data loading section
- */
+import Button from '../../ui/Button';
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
-    str
+    str,
   );
 
 const fakeCart = [
@@ -99,45 +43,57 @@ function CreateOrder() {
   const cart = fakeCart;
 
   return (
-    <div>
-      <h2>Ready to order? Lets go!</h2>
+    <div className="px-4 py-6">
+      <h2 className="mb-8 text-xl font-semibold ">Ready to order? Lets go!</h2>
 
-      <Form method='POST'>
-        <div>
-          <label>First Name</label>
-          <input type='text' name='customer' required />
+      <Form method="POST">
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">First Name</label>
+          <input type="text" name="customer" required className="input grow" />
         </div>
 
-        <div>
-          <label>Phone number</label>
-          <div>
-            <input type='tel' name='phone' required />
-          </div>
-          {formErrors?.phone && <p>{formErrors.phone}</p>}
-        </div>
-
-        <div>
-          <label>Address</label>
-          <div>
-            <input type='text' name='address' required />
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">Phone number</label>
+          <div className="grow">
+            <input type="tel" name="phone" required className="input w-full" />
+            {formErrors?.phone && (
+              <p className="mt-2 rounded-md  bg-red-100 p-2 text-xs text-red-700">
+                {formErrors.phone}
+              </p>
+            )}
           </div>
         </div>
 
-        <div>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">Address</label>
+          <div className="grow">
+            <input
+              type="text"
+              name="address"
+              required
+              className="input w-full"
+            />
+          </div>
+        </div>
+
+        <div className="mb-12 flex items-center gap-5">
           <input
-            type='checkbox'
-            name='priority'
-            id='priority'
+            type="checkbox"
+            name="priority"
+            id="priority"
             // value={withPriority}
             // onChange={(e) => setWithPriority(e.target.checked)}
+            className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-offset-2"
           />
-          <label htmlFor='priority'>Want to yo give your order priority?</label>
+          <label htmlFor="priority" className="font-medium">
+            Want to yo give your order priority?
+          </label>
         </div>
-        <input type='hidden' name='cart' value={JSON.stringify(cart)} />
+        <input type="hidden" name="cart" value={JSON.stringify(cart)} />
         <div>
-          <button disabled={isSubmitting}>
+          <Button type="primary" disabled={isSubmitting}>
             {isSubmitting ? 'Placing order...' : 'Order now'}
-          </button>
+          </Button>
         </div>
       </Form>
     </div>
