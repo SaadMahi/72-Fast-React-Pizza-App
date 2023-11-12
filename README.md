@@ -1,33 +1,43 @@
-# Geolocation and Address Retrieval Redux Slice
+# UpdateOrder Component
 
-This code defines a Redux slice named `user` responsible for managing user-related data, particularly geolocation and address information. The slice utilizes the `createAsyncThunk` and `createSlice` functions from the `@reduxjs/toolkit` package for handling asynchronous operations and creating the Redux slice, respectively.
+This code defines a React component named `UpdateOrder`, which is responsible for updating order data without navigation. The primary functionality is to mark an order as a priority order by using the provided `Button` component and a form from the `useFetcher` hook.
 
-## 1. Async Thunk for Fetching User Address
+## Breakdown of the Code:
 
-The `fetchAddress` asynchronous thunk is created to handle the process of obtaining the user's geolocation and fetching a human-readable address using a reverse geocoding API. The steps involved are as follows:
+### Header Comments and Imports:
 
-- **Get Geolocation Position:** It uses the `navigator.geolocation` API to obtain the user's current position (latitude and longitude).
+- The code begins with comments disabling ESLint rules for React prop types and unused variables.
+- It imports necessary dependencies, including the `useFetcher` hook, the `Button` component, and the `updateOrder` function from the `apiRestaurant` service.
 
-- **Reverse Geocoding:** Utilizes an external API, likely `getAddress` from `../../services/apiGeocoding`, to convert the obtained coordinates into a human-readable address. The address details include locality, city, postcode, and country.
+### Function Description:
 
-- **Return Data:** The thunk returns an object containing the user's position and the formatted address.
+- The main purpose of this component is to update order data without triggering navigation.
+- A priority order is set if it wasn't selected before placing the order.
+- The code references specific figures (e.g., `fig: 1`) to guide through the implementation steps.
 
-## 2. Redux Slice State and Reducers
+### Form Implementation:
 
-The `userSlice` defines the initial state, which includes fields for the user's `username`, `status` (indicating the current state of the asynchronous operation), `position` (user's geolocation coordinates), `address` (human-readable address), and `error` (error message if any).
+- The `UpdateOrder` component renders a form using the `fetcher.Form` component.
+- The form has a method set to "PATCH" as it's intended for updating existing data.
+- The form includes a `Button` with the label "Make Priority."
 
-## 3. Reducers for Synchronous Actions
+### Action Function:
 
-The slice includes a synchronous action `updateName` to update the user's username.
+- An asynchronous function named `action` is exported. This function is called when the form is submitted.
+- The function receives an object with `request` and `params` properties. In this case, only `params` is used.
+- The `updateOrder` function is called with the order ID and data containing the `priority` field set to `true`.
+- The `await` keyword is used to ensure that the `updateOrder` function completes before proceeding.
+- The function returns `null`.
 
-## 4. Extra Reducers for Async Thunk
+### Component Usage:
 
-The `extraReducers` section handles actions dispatched by the `fetchAddress` thunk, modifying the state based on the asynchronous operation's lifecycle:
+- The `UpdateOrder` component is exported and receives an `order` prop, though it's not used in the current implementation.
 
-- **Pending:** Sets the `status` to 'loading' while the data is being fetched.
-- **Fulfilled:** Updates the state with the retrieved `position` and `address` and sets `status` back to 'idle'.
-- **Rejected:** Handles errors by setting `status` to 'error' and providing an error message in the `error` field.
+### Usage of `useFetcher`:
 
-## Conclusion
+- The `useFetcher` hook is used to obtain the `fetcher` object, which provides a form component for making non-navigational updates.
 
-This Redux slice efficiently manages the state related to user information, incorporating asynchronous geolocation and address retrieval using thunks. The code adheres to best practices, leveraging the Redux Toolkit for concise and readable Redux logic.
+### Conclusion:
+
+- The comments provide a step-by-step explanation of the implementation, emphasizing the use of the `fetcher.Form` for non-navigational data updates.
+- Revalidation is highlighted as a powerful feature that triggers automatic data refetching and page rerendering when data changes.
